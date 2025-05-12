@@ -13,21 +13,23 @@
         }
 
         body{
-            height: 100vh;
+            min-height: 100vh; /* Asegura que el body ocupe al menos la altura de la pantalla */
             background: #584040;
             display: flex;
             align-items: center;
-            justify-content: center; /* Centra el contenedor */
+            justify-content: center; /* Centra el contenedor horizontalmente */
             flex-direction: column; /* Permite alinear elementos verticalmente */
         }
 
         .contenedor {
-            width: 920px;
+            width: 90%; /* Ancho adaptable */
+            max-width: 920px; /* Ancho máximo para pantallas grandes */
             height: 280px;
             position: relative;
             background: linear-gradient(#b7d6c7, transparent) #ffe2d1;
             transition: background-color 1s linear;
             overflow: hidden;
+            margin: 20px 0; /* Espacio arriba y abajo */
         }
 
         .mediodia {
@@ -206,7 +208,7 @@
         var dinoPosY = sueloY;
 
         var sueloX = 0;
-        var velEscenario = 1280/3;
+        var velEscenario = 1300/3;
         var gameVel = 1;
         var score = 0;
 
@@ -243,6 +245,7 @@
             textoScore = document.querySelector(".score");
             dino = document.querySelector(".dino");
             document.addEventListener("keydown", HandleKeyDown);
+            document.addEventListener("touchstart", HandleTouchStart); // Nuevo evento para tocar la pantalla
             retryButton.addEventListener("click", ReiniciarJuego); // Agrega el evento al botón
 
             cancion = document.getElementById("miCancion"); // Obtén el elemento de audio
@@ -269,6 +272,13 @@
             }
         }
 
+        function HandleTouchStart(ev) {
+            if (!parado) { // Solo permite saltar si el juego no ha terminado
+                Saltar();
+                ev.preventDefault(); // Evita el comportamiento predeterminado del toque (como el zoom)
+            }
+        }
+
         function Saltar(){
             if(dinoPosY === sueloY){
                 saltando = true;
@@ -280,7 +290,6 @@
         function MoverDinosaurio() {
             dinoPosY += velY * deltaTime;
             if(dinoPosY < sueloY){
-
                 TocarSuelo();
             }
             dino.style.bottom = dinoPosY+"px";
@@ -386,7 +395,6 @@
                 gameVel = 3;
                 contenedor.classList.add("noche");
             }
-            suelo.style.animationDuration = (3/gameVel)+"s";
         }
 
         function GameOver() {
